@@ -2,6 +2,9 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import {Router, Route, Routes, Switch} from 'react-router-dom';
 
+const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+
+
 let map;
 
 function initMap() {
@@ -88,7 +91,7 @@ function App() {
 
     const script = document.createElement("script");
 
-    const scriptUrl = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAx-byIHB7GLvS0jrBj915x_13s9gk-mq8&callback=initMap`;
+    const scriptUrl = `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_GOOGLE_MAPS_API_KEY}&callback=initMap`;
     script.async = true;
 
     document.body.appendChild(script);
