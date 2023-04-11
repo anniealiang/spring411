@@ -2,11 +2,23 @@ require("dotenv").config();
 const express = require("express");
 const cors = require('cors');
 const axios = require('axios');
+const userRouter = require('./controllers/userInfo');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.use(cors())
 app.use(express.json());
+app.use('/user', userRouter)
+
+const mongoose = require("mongoose");
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => {
+    console.log('Connected to database');
+})
+.catch((err) => {
+    console.log('Error connecting to DB', err.message);
+});;
 
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
@@ -15,10 +27,14 @@ const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const SPOTIFY_REDIRECT_URI = 'http://localhost:3001/callback/';
 
 app.get("/login", (req, res) => {
+
+    const scope = "user-read-private user-read-email"
+
     const queryParams = new URLSearchParams({
         response_type: 'code',
         client_id: SPOTIFY_CLIENT_ID,
         redirect_uri: SPOTIFY_REDIRECT_URI,
+        scope: scope,
     });
 
     res.redirect(`${SPOTIFY_AUTH_URL}?${queryParams.toString()}`);
