@@ -1,9 +1,9 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import {Router, Route, Routes, Switch} from 'react-router-dom';
+import { addToUser } from './services/addUser';
 
-const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-
+const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 let map;
 
@@ -35,6 +35,25 @@ function loadScript(url, callback) {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (loggedIn) {
+      const accessToken = localStorage.getItem('access_token');
+      const fetchData = async () => {
+        const response = await fetch('https://api.spotify.com/v1/me', {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+        const data = await response.json();
+        if (data !== undefined) {
+          addToUser(data.id, data.email, data.display_name);
+        }
+      };
+      fetchData();
+    }
+    
+  }, [loggedIn]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -110,7 +129,7 @@ function App() {
     <div className="App">
       <p>Spotify Location App</p>
       {loggedIn ? 
-        <><p>Logged in</p><div id="map"></div></> 
+        <><p>Logged in</p><div id="map" style={{width: "50%", marginLeft: "40px", marginTop: "50px", height: "650px"}}></div></> 
       : 
         <a href="http://localhost:3001/login"><button>Login with Spotify</button></a>
       }
