@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import {Router, Route, Routes, Switch} from 'react-router-dom';
-import { addToUser } from './services/addUser';
+import { addToUser, getUser } from './services/addUser';
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -46,7 +46,8 @@ function App() {
           }
         });
         const data = await response.json();
-        if (data !== undefined) {
+        const fetchedUser = await getUser(data.id);
+        if (data !== undefined && fetchedUser === undefined) {
           addToUser(data.id, data.email, data.display_name);
         }
       };
