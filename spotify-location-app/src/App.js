@@ -61,6 +61,16 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (localStorage.getItem('access_token') !== 'null') {
+      console.log('Logged in');
+      setLoggedIn(true);
+    } else {
+      console.log('Not logged in');
+      setLoggedIn(false);
+    }
+  }, []);
+
+  useEffect(() => {
     let latitude;
     let longitude;
 
@@ -90,14 +100,7 @@ function App() {
       navigator.geolocation.getCurrentPosition(success, error);
     };
 
-    if (localStorage.getItem('access_token') !== 'null') {
-      console.log('Logged in');
-      setLoggedIn(true);
-      find_location();
-    } else {
-      console.log('Not logged in');
-      setLoggedIn(false);
-    }
+    find_location();
 
     const script = document.createElement('script');
 
@@ -120,8 +123,7 @@ function App() {
       <p>Spotify Location App</p>
       {loggedIn ? (
         <>
-          <p>Logged in</p>
-          <div id='map'></div>
+          <><p>Logged in</p><div id="map" style={{width: "50%", marginLeft: "40px", marginTop: "50px", height: "650px"}}></div></>
         </>
       ) : (
         <a href='http://localhost:3001/login'>

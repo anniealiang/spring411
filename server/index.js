@@ -13,12 +13,12 @@ app.use('/user', userRouter)
 const mongoose = require("mongoose");
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-.then(() => {
-    console.log('Connected to database');
-})
-.catch((err) => {
-    console.log('Error connecting to DB', err.message);
-});;
+    .then(() => {
+        console.log('Connected to database');
+    })
+    .catch((err) => {
+        console.log('Error connecting to DB', err.message);
+    });
 
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
