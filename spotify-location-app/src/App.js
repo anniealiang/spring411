@@ -7,30 +7,33 @@ const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 let map;
 
-function initMap() {
-  // Create a new map instance and set its center and zoom level
-  map = new window.google.maps.Map(document.getElementById('map'), {
-    center: { lat: 40.712776, lng: -74.005974 }, // New York City coordinates
-    zoom: 8,
-  });
-}
+  function initMap() {
+    // Create a new map instance and set its center and zoom level
+    map = new window.google.maps.Map(document.getElementById('map'), {
+      center: { lat: 40.712776, lng: -74.005974 }, // New York City coordinates
+      zoom: 8,
+    });
+  }
 
-window.initMap = initMap;
+  window.initMap = initMap;
 
-function loadScript(url, callback) {
-  const script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = url;
-  script.async = true;
-  script.defer = true;
+  function loadScript(url, callback) {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    script.async = true;
+    script.defer = true;
 
-  script.onload = callback;
+    script.onload = callback;
 
-  document.head.appendChild(script);
-}
+    document.head.appendChild(script);
+  }
+
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+
+  
 
   useEffect(() => {
     if (loggedIn) {
@@ -43,11 +46,63 @@ function App() {
         });
         const data = await response.json();
         const fetchedUser = await getUser(data.id);
-        if (data !== undefined && fetchedUser === undefined) {
+        if (data != undefined && fetchedUser.length === 0) {
           addToUser(data.id, data.email, data.display_name);
         }
       };
       fetchData();
+
+      let latitude;
+      let longitude;
+
+      const find_location = () => {
+        const success = (position) => {
+          const geolocationPosition = position.coords;
+          console.log(geolocationPosition);
+
+          latitude = geolocationPosition.latitude;
+          longitude = geolocationPosition.longitude;
+          const geoApiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
+
+          fetch(geoApiUrl)
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+            });
+          if (latitude && longitude) {
+            var marker = new window.google.maps.Marker({
+              position: new window.google.maps.LatLng(latitude, longitude),
+              title: "You are here!",
+              map: map,
+            });
+          }
+          map.panTo(marker.getPosition());
+          map.setZoom(14);
+        };
+
+        const error = (error) => {
+          console.log(error);
+        };
+
+        navigator.geolocation.getCurrentPosition(success, error);
+      };
+      
+      find_location();
+
+      const script = document.createElement('script');
+
+      const scriptUrl = `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_GOOGLE_MAPS_API_KEY}&callback=initMap`;
+      script.async = true;
+
+      document.body.appendChild(script);
+
+      loadScript(scriptUrl, () => {
+        console.log('Google Maps API script loaded');
+      });
+
+      return () => {
+        document.body.removeChild(script);
+      };
     }
     
   }, [loggedIn]);
@@ -58,9 +113,6 @@ function App() {
     const refresh_token = queryParams.get('refresh_token');
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('refresh_token', refresh_token);
-  }, []);
-
-  useEffect(() => {
     if (localStorage.getItem('access_token') !== 'null') {
       console.log('Logged in');
       setLoggedIn(true);
@@ -71,51 +123,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    let latitude;
-    let longitude;
-
-    const find_location = () => {
-      const success = (position) => {
-        const geolocationPosition = position.coords;
-        console.log(geolocationPosition);
-
-        latitude = geolocationPosition.latitude;
-        longitude = geolocationPosition.longitude;
-        const geoApiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
-
-        fetch(geoApiUrl)
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-          });
-        if (latitude && longitude) {
-          map.setCenter(new window.google.maps.LatLng(latitude, longitude));
-        }
-      };
-
-      const error = (error) => {
-        console.log(error);
-      };
-
-      navigator.geolocation.getCurrentPosition(success, error);
-    };
-
-    find_location();
-
-    const script = document.createElement('script');
-
-    const scriptUrl = `https://maps.googleapis.com/maps/api/js?key=${REACT_APP_GOOGLE_MAPS_API_KEY}&callback=initMap`;
-    script.async = true;
-
-    document.body.appendChild(script);
-
-    loadScript(scriptUrl, () => {
-      console.log('Google Maps API script loaded');
-    });
-
-    return () => {
-      document.body.removeChild(script);
-    };
+    
   }, []);
 
   return (
