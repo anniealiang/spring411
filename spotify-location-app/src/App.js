@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
-import { Router, Route, Routes } from 'react-router-dom';
+import {Router, Route, Routes, Switch} from 'react-router-dom';
+import { addToUser, getUser } from './services/addUser';
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -30,6 +31,26 @@ function loadScript(url, callback) {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (loggedIn) {
+      const accessToken = localStorage.getItem('access_token');
+      const fetchData = async () => {
+        const response = await fetch('https://api.spotify.com/v1/me', {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+        const data = await response.json();
+        const fetchedUser = await getUser(data.id);
+        if (data !== undefined && fetchedUser === undefined) {
+          addToUser(data.id, data.email, data.display_name);
+        }
+      };
+      fetchData();
+    }
+    
+  }, [loggedIn]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);

@@ -19,3 +19,19 @@ export const addToUser = async (uid, email, name) => {
     
     
 }
+
+export const getUser = async (uid) => {
+    
+    const payload = {
+        params: {
+          uid: uid
+        }
+    }
+
+    try {
+        const res = await axios.get(url, payload);
+        return res.data;
+    } catch (e) {
+        return null;
+    }
+}
