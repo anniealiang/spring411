@@ -2,6 +2,9 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import {Router, Route, Routes, Switch} from 'react-router-dom';
 import { addToUser } from './services/addUser';
+import { SpotifyPlaylist } from './components/SpotifyPlaylist.js';
+import { Container } from 'react-bootstrap';
+
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -126,18 +129,27 @@ function App() {
 
 
   return (
-    <div className="App">
+    <><div className="App">
+     
       <p>Spotify Location App</p>
-      {loggedIn ? 
-        <><p>Logged in</p><div id="map" style={{width: "50%", marginLeft: "40px", marginTop: "50px", height: "650px"}}></div></> 
-      : 
-        <a href="http://localhost:3001/login"><button>Login with Spotify</button></a>
-      }
+      { loggedIn ? <p class='loggedIn'>Logged in</p> : <p class='loggedIn'>Not logged in</p>}
+      <Container>
+      {loggedIn ?
+        <>
+        <div id="map" style={{ width: "50%", marginLeft: "40px", marginTop: "50px", height: "650px" }}>
+        
+
+        </div>  </>
+        :
+        <a href="http://localhost:3001/login"><button>Login with Spotify</button></a>}
       {/* <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/callback" element={<HandleLogin />} />
-      </Routes> */}
-    </div>
+      <Route path="/login" element={<Login />} />
+      <Route path="/callback" element={<HandleLogin />} />
+    </Routes> */}
+    <SpotifyPlaylist/>
+    </Container>
+      </div></>
+      
 
   );
 }
