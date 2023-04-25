@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 
 export function SpotifyPlaylist() {
     const [searchInput, setSearchInput] = useState("");
+
     return (
         <div className="Playlist"> 
         <Container>
@@ -16,7 +17,7 @@ export function SpotifyPlaylist() {
                         onKeyPress={event => {
                             if (event.key === 'Enter') {
                                 // this.props.onSearch(this.state.term);
-                                console.log("Enter key pressed");
+                                console.log("Pressed Key");
                             }
                         }}
                         onChange={event => setSearchInput(event.target.value)}
@@ -24,9 +25,19 @@ export function SpotifyPlaylist() {
                         <Button onClick={event => {console.log("Clicked Button")}}>
                             Search
                         </Button>
-
                 </InputGroup>
-            </Container>            
+            </Container>   
+            <Container>
+                    <Card>
+                        <Card.Img src="#"/>
+                        <Card.Body> 
+                            <Card.Title> Album Name Here </Card.Title>
+
+                        </Card.Body>
+                    </Card>
+            </Container>
+
         </div>
     )
+
 }
