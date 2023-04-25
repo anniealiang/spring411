@@ -8,6 +8,8 @@ import { Container } from 'react-bootstrap';
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
+
+
 let map;
 
 function initMap() {
@@ -126,6 +128,9 @@ function App() {
       document.body.removeChild(script);
     };
   }, []);
+
+    //Spotify Playlist Part 
+
 
 
   return (
