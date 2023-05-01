@@ -21,6 +21,7 @@ export function searchForPlaylists(query, accessToken) {
 }
 
 export const Spotify = {
+    Player: (options) => new Spotify.Player(options),
     searchForPlaylists: function(accessToken, query) {
       const url = `https://api.spotify.com/v1/search?q=${query}&type=playlist`;
       return fetch(url, {
@@ -31,4 +32,4 @@ export const Spotify = {
         .then(data => data.playlists.items);
     }
   };
-
+  
