@@ -1,7 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { Spotify } from './spotify.js';
 
 export const CLIENT_ID = "6e77b58363da431b9a4092804a4b9175";
 export const CLIENT_SECRET = "be00970e2f354242be8316cb93959372";
@@ -55,36 +54,6 @@ export function SpotifyPlaylist({ setLoggedIn, searchInput }) {
     }
   }, [accessToken, searchInput])
 
-  function playPlaylist(playlistId) {
-    fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        const trackIds = data.tracks.items.map(track => track.track.id);
-        const uri = `spotify:track:${trackIds.join(',')}`;
-        const spotifyPlayer = new Spotify.Player({
-          name: 'Web Playback SDK Quick Start Player',
-          getOAuthToken: cb => { cb(accessToken); },
-          volume: 0.5
-        });
-        spotifyPlayer.connect().then(() => {
-          return spotifyPlayer.resume();
-        }).then(() => {
-          return spotifyPlayer.queue(uri);
-        }).then(() => {
-          return spotifyPlayer.getCurrentState();
-        }).then(state => {
-          console.log(state);
-        });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-
   return (
     <div className="Playlist">
       <Container>
@@ -96,7 +65,6 @@ export function SpotifyPlaylist({ setLoggedIn, searchInput }) {
                   <Card.Img variant="top" src={playlist.imageUrl} style={{ height: "250px", objectFit: "cover" }} />
                   <Card.Body>
                     <Card.Title>{playlist.name}</Card.Title>
-                    <button onClick={() => playPlaylist(playlist.id)}>Play Playlist</button>
                   </Card.Body>
                 </Card>
               </Col>
