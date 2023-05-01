@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.login-button {
+  margin-top: 50px;
+  align-items: center;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -40,4 +45,24 @@
 #map {
   height: 500px;
   width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+}
+
+.card-body {
+  height: 100px;
+}
+
+.card {
+  height: 350px;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
 }

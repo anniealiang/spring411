@@ -2,6 +2,8 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import {Router, Route, Routes, Switch} from 'react-router-dom';
 import { addToUser, getUser } from './services/addUser';
+import { Container } from 'react-bootstrap';
+import { SpotifyPlaylist } from './components/SpotifyPlaylist';
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -32,7 +34,7 @@ let map;
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-
+  const [city, setCity] = useState("");
   
 
   useEffect(() => {
@@ -67,6 +69,7 @@ function App() {
           fetch(geoApiUrl)
             .then((res) => res.json())
             .then((data) => {
+              setCity(data.city);
               console.log(data);
             });
           if (latitude && longitude) {
@@ -127,18 +130,44 @@ function App() {
   }, []);
 
   return (
-    <div className='App'>
-      <p>Spotify Location App</p>
-      {loggedIn ? (
-        <>
-          <><p>Logged in</p><div id="map" style={{width: "50%", marginLeft: "40px", marginTop: "50px", height: "650px"}}></div></>
-        </>
-      ) : (
-        <a href='http://localhost:3001/login'>
-          <button>Login with Spotify</button>
-        </a>
-      )}
-    </div>
+    <>
+      <div className="App">
+        <p>Spotify Location App</p>
+        {loggedIn ? (
+          <>
+            <p className="loggedIn">Logged in</p>
+          </>
+        ) : (
+          <div>
+            <p className="loggedIn">Not logged in</p>
+            <a href="http://localhost:3001/login" className="login-button">
+            <button>Login with Spotify</button>
+            </a>
+          </div>
+          
+          
+        )}
+        <Container style={{marginLeft: 20}}>
+          {loggedIn ? (
+            <>
+              <div
+                id="map"
+                style={{
+                  width: "80%",
+                  marginLeft: "10px",
+                  marginRight: "40px",
+                  marginTop: "50px",
+                  height: "650px",
+                }}
+              ></div>{" "}
+               <SpotifyPlaylist searchInput={city} setLoggedIn={setLoggedIn} />
+            </>
+          ) : (
+            ""
+          )}
+        </Container>
+      </div>
+    </>
   );
 }
 
