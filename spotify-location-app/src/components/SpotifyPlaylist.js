@@ -9,6 +9,7 @@ export const CLIENT_SECRET = "be00970e2f354242be8316cb93959372";
 export function SpotifyPlaylist() {
     const [searchInput, setSearchInput] = useState("");
     const [accessToken, setAccessToken] = useState("");
+    const [playlists, setPlaylists] = useState([]);
 
     useEffect(() => {
       // API Access Token
@@ -29,19 +30,47 @@ export function SpotifyPlaylist() {
     async function search() {
       console.log("Search for " + searchInput);
       
-      // Get request using searcg to get the Artist ID
+      // Get request using search to get the playlist
 
-        var artistParameters = {
+      var playlistParameters = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+        }
+        };
+        
+        var playlistSearchURL = 'https://api.spotify.com/v1/search?q=' + searchInput + '&type=playlist';
+        
+        var playlistParameters = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + accessToken
-        }
-    }
-        var artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchInput + '&type=artist', artistParameters)
+            }
+        };
+
+        fetch(playlistSearchURL, playlistParameters)
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                var playlists = data.playlists.items.map(playlist => {
+                    return {
+                        name: playlist.name,
+                        id: playlist.id
+                    };
+                });
+                setPlaylists(playlists);
+                console.log('Found ' + playlists.length + ' playlists:');
+                for (var i = 0; i < playlists.length; i++) {
+                    console.log(playlists[i].name + ' (ID: ' + playlists[i].id + ')');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    
       // Get request using Artist ID grab all the albums from that artist
+            
 
       // Display those albums to the user
     }
@@ -70,42 +99,19 @@ export function SpotifyPlaylist() {
 
             <Container>
                 <Row className="mx-2 row row-cols-3"> 
-                    <Card>
-                        <Card.Img src="#"/>
-                        <Card.Body> 
-                            <Card.Title> Album Name Here </Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img src="#"/>
-                        <Card.Body> 
-                            <Card.Title> Album Name Here </Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img src="#"/>
-                        <Card.Body> 
-                            <Card.Title> Album Name Here </Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img src="#"/>
-                        <Card.Body> 
-                            <Card.Title> Album Name Here </Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img src="#"/>
-                        <Card.Body> 
-                            <Card.Title> Album Name Here </Card.Title>
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Img src="#"/>
-                        <Card.Body> 
-                            <Card.Title> Album Name Here </Card.Title>
-                        </Card.Body>
-                    </Card>
+                {playlists.map((playlist, i) => {
+                    console.log(playlist);
+                    return (
+                        <Card>
+                            <Card.Img src="#"/>
+                            <Card.Body> 
+                                <Card.Title>{playlist.name}</Card.Title>
+                            </Card.Body>
+                        </Card>
+
+                        )
+                    })}
+                  
                 </Row>
             </Container>
 
@@ -113,3 +119,4 @@ export function SpotifyPlaylist() {
     )
 
 }
+
