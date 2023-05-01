@@ -49,3 +49,15 @@
   
 }
 
+.card-body {
+  height: 100px;
+}
+
+.card {
+  height: 350px;
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}

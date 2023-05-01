@@ -41,7 +41,7 @@ function loadScript(url, callback) {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [city, setCity] = useState('');
+  const [city, setCity] = useState("");
 
   useEffect(() => {
     if (loggedIn) {
@@ -96,12 +96,14 @@ function App() {
         .then(res => res.json())
         .then(data => {
           console.log(data)
+          setCity(data.city);
         })
       }
       
       const error = (error) => {
         console.log(error);
       }
+
     
       navigator.geolocation.getCurrentPosition(success, error);
     }
@@ -129,7 +131,7 @@ function App() {
     return () => {
       document.body.removeChild(script);
     };
-  }, []);
+  }, [setLoggedIn]);
 
 
   function handleLogout() {
@@ -163,7 +165,7 @@ function App() {
                   height: "650px",
                 }}
               ></div>{" "}
-              <SpotifyPlaylist />
+               <SpotifyPlaylist searchInput={city} setLoggedIn={setLoggedIn} />
             </>
           ) : (
             <a href="http://localhost:3001/login">
