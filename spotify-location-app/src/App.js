@@ -4,6 +4,7 @@ import {Router, Route, Routes, Switch} from 'react-router-dom';
 import { addToUser } from './services/addUser';
 import { SpotifyPlaylist } from './components/SpotifyPlaylist.js';
 import { Container } from 'react-bootstrap';
+import LogoutButton from './components/LogoutButton';
 
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -40,6 +41,7 @@ function loadScript(url, callback) {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [city, setCity] = useState('');
 
   useEffect(() => {
     if (loggedIn) {
@@ -129,34 +131,49 @@ function App() {
     };
   }, []);
 
-    //Spotify Playlist Part 
 
+  function handleLogout() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    setLoggedIn(false);
+  }
 
 
   return (
-    <><div className="App">
-     
-      <p>Spotify Location App</p>
-      { loggedIn ? <p class='loggedIn'>Logged in</p> : <p class='loggedIn'>Not logged in</p>}
-      <Container>
-      {loggedIn ?
-        <>
-        <div id="map" style={{ width: "50%", marginLeft: "40px", marginTop: "50px", height: "650px" }}>
-        
-
-        </div>  </>
-        :
-        <a href="http://localhost:3001/login"><button>Login with Spotify</button></a>}
-      {/* <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/callback" element={<HandleLogin />} />
-    </Routes> */}
-    <SpotifyPlaylist/>
-    </Container>
-      </div></>
-      
-
+    <>
+      <div className="App">
+        <p>Spotify Location App</p>
+        {loggedIn ? (
+          <>
+            <p className="loggedIn">Logged in</p>
+            <button onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <p className="loggedIn">Not logged in</p>
+        )}
+        <Container>
+          {loggedIn ? (
+            <>
+              <div
+                id="map"
+                style={{
+                  width: "50%",
+                  marginLeft: "40px",
+                  marginTop: "50px",
+                  height: "650px",
+                }}
+              ></div>{" "}
+              <SpotifyPlaylist />
+            </>
+          ) : (
+            <a href="http://localhost:3001/login">
+              <button>Login with Spotify</button>
+            </a>
+          )}
+        </Container>
+      </div>
+    </>
   );
-}
+          }
 
-export default App;
+  export default App;
