@@ -14,14 +14,23 @@ const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 let map;
 
 function initMap() {
-  // Create a new map instance and set its center and zoom level
-  var map = new window.google.maps.Map(document.getElementById("map"), {
-    center: { lat: 40.712776, lng: -74.005974 }, // New York City coordinates
-    zoom: 8,
+  // Get user's current location
+  navigator.geolocation.getCurrentPosition((position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    // Create a new map instance and center it on the user's location
+    map = new window.google.maps.Map(document.getElementById("map"), {
+      center: { lat: latitude, lng: longitude },
+      zoom: 8,
+    });
+  }, () => {
+    // If there's an error, center the map on a default location
+    map = new window.google.maps.Map(document.getElementById("map"), {
+      center: { lat: 40.712776, lng: -74.005974 }, // New York City coordinates
+      zoom: 8,
+    });
   });
-window.onload = function() {
-  initMap();
-};
 }
 
 window.initMap = initMap;
@@ -140,7 +149,7 @@ function App() {
     setLoggedIn(false);
   }
 
-
+  
   return (
     <>
       <div className="App">
@@ -168,7 +177,7 @@ function App() {
                <SpotifyPlaylist searchInput={city} setLoggedIn={setLoggedIn} />
             </>
           ) : (
-            <a href="http://localhost:3001/login">
+            <a href="http://localhost:3001/login" className="login-button">
               <button>Login with Spotify</button>
             </a>
           )}

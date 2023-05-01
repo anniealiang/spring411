@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.login-button {
+  margin-top: 50px;
+  align-items: center;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -61,3 +66,4 @@
   height: 200px;
   object-fit: cover;
 }
+
