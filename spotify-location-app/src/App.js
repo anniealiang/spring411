@@ -144,11 +144,30 @@ function App() {
 
 
   function handleLogout() {
+    // Remove access token and refresh token from localStorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    
+    // Revoke access token from Spotify API
+    const accessToken = localStorage.getItem('access_token');
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    };
+    fetch('https://accounts.spotify.com/api/token/revoke', requestOptions)
+      .then(() => {
+        console.log('Access token revoked');
+      })
+      .catch((error) => {
+        console.error('Error revoking access token:', error);
+      });
+  
+    // Set loggedIn state to false
     setLoggedIn(false);
   }
-
+  
   
   return (
     <>
