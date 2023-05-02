@@ -57,12 +57,12 @@ export function SpotifyPlaylist({ setLoggedIn, searchInput }) {
   return (
     <div className="Playlist">
       <Container>
-        <Row className="row row-cols-3">
+        <Row className="row-cols-4 mb-4">
           {playlists.map((playlist, i) => {
             return (
               <Col key={i}>
-                <Card>
-                  <Card.Img variant="top" src={playlist.imageUrl} style={{ height: "250px", objectFit: "cover" }} />
+                <Card className="my-card h-100">
+                  <Card.Img variant="top" src={playlist.imageUrl} />
                   <Card.Body>
                     <Card.Title>{playlist.name}</Card.Title>
                   </Card.Body>

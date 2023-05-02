@@ -12,6 +12,10 @@
   pointer-events: none;
 }
 
+.App-header {
+  font-size: 14px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -54,15 +58,19 @@
   
 }
 
-.card-body {
-  height: 100px;
+.card {
+  height: 400px;
+  
 }
 
-.card {
-  height: 350px;
+.card-body {
+  height: 75px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-img-top {
-  height: 200px;
+  height: 300px;
   object-fit: cover;
 }
+

@@ -1,10 +1,7 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
-import {Router, Route, Routes, Switch} from 'react-router-dom';
 import { addToUser } from './services/addUser';
 import { SpotifyPlaylist } from './components/SpotifyPlaylist.js';
-import { Container } from 'react-bootstrap';
-import LogoutButton from './components/LogoutButton';
 
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -47,6 +44,13 @@ function loadScript(url, callback) {
   document.head.appendChild(script);
 }
 
+function LocationDisplay({ city }) {
+  return (
+    <div className="LocationDisplay">
+      <h2>Your Current Location: {city}</h2>
+    </div>
+  );
+}
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -172,27 +176,31 @@ function App() {
   return (
     <>
       <div className="App">
-        <p>Spotify Location App</p>
+        <h1>Spotify Location App</h1>
+        <hr />
         {loggedIn ? (
           <>
-            <p className="loggedIn">Logged in</p>
+            <p className="loggedIn">Logged In</p>
             <button onClick={handleLogout}>Logout</button>
+            <hr />
           </>
         ) : (
-          <p className="loggedIn">Not logged in</p>
+          <p className="loggedIn">Not Logged In</p>
         )}
-        <Container>
           {loggedIn ? (
             <>
+              <LocationDisplay city={city} />
               <div
                 id="map"
                 style={{
-                  width: "50%",
-                  marginLeft: "40px",
+                  width: "80%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
                   marginTop: "50px",
                   height: "650px",
                 }}
               ></div>{" "}
+               <hr />
                <SpotifyPlaylist searchInput={city} setLoggedIn={setLoggedIn} />
             </>
           ) : (
@@ -200,7 +208,6 @@ function App() {
               <button>Login with Spotify</button>
             </a>
           )}
-        </Container>
       </div>
     </>
   );
